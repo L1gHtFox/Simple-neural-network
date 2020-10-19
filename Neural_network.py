@@ -15,8 +15,8 @@ class neuralNetwork:
 		self.lr = learningrate
 
 		# Инициализация матрицы весов
-		self.wih = numpy.random.normal(0.0, pow(self.hnodes, -0.5))
-		self.who = numpy.random.normal(0.0, pow(self.onodes, -0.5))
+		self.wih = numpy.random.normal(0.0, pow(self.inodes, -0.5), (self.hnodes, self.inodes))
+		self.who = numpy.random.normal(0.0, pow(self.hnodes, -0.5), (self.onodes, self.hnodes))
 
 		# Использование сигмоиды в качестве функции активации
 		self.activation_function = lambda x: scipy.special.expit(x)
@@ -32,7 +32,6 @@ class neuralNetwork:
 		hidden_inputs = numpy.dot(self.wih, inputs)
 		# Рассчитать исходящие сигналы для скрытого слоя
 		hidden_outputs = self.activation_function(hidden_inputs)
-
 		# Рассчитать входящие сигналы для выходного слоя
 		final_inputs = numpy.dot(self.who, hidden_outputs)
 		# Рассчитать исходящие сигналы для выходного слоя
@@ -47,12 +46,10 @@ class neuralNetwork:
 		hidden_errors = numpy.dot(self.who.T, output_errors)
 
 		# Обновить весовые коэффициенты связей между скрытым и выходным слоями
-		self.who += self.lr * numpy.dot((output_errors * final_outputs * (1.0 - final_outputs)),
-										numpy.transpose(hidden_outputs))
+		self.who += self.lr * numpy.dot((output_errors * final_outputs * (1.0 - final_outputs)), numpy.transpose(hidden_outputs))
 
 		# Обновить весовые коэффициенты связей между входным и скрытым слоями
-		self.win += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)),
-										numpy.transpose(inputs))
+		self.wih += self.lr * numpy.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), numpy.transpose(inputs))
 
 	# Опрос нейронной сети
 	def query(self, inputs_list):

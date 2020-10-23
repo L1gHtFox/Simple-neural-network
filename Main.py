@@ -37,13 +37,39 @@ for record in training_data_list:
     NN.train(inputs, targets)
 print("Trained")
 
+# Тестирование нейронной сети
+
 test_data_file = open("mnist_dataset\mnist_test_10.csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
-all_values = test_data_list[2].split(',')
-print(all_values[0])
+# Журнал оценок работы сети
+scorecard = []
 
+# Преобразовать все записи в тестовом наборе данных
+for record in training_data_list:
+    # Полечить значения из записи, используя символы (",") в качестве разделителей
+    all_values = record.split(',')
+    # Правильный ответ - первое значение
+    correct_label = int(all_values[0])
+    print(correct_label, " - истинный маркер")
+    # Масштабировать и сместить входные значения
+    inputs = (numpy.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    # Опрос сети
+    outputs = NN.query(inputs)
+    # Индекс наибольшего значения является маркерным значением
+    label = numpy.argmax(outputs)
+    # Присоединить оценку ответа сети к концу списка
+    if (label == correct_label):
+        # В случае правильного ответа сети присоеденить к списку 1
+        scorecard.append(1)
+        print(label, " - ответ сети правельный!")
+    else:
+        # В ином случае присоеденить к списку 0
+        scorecard.append(0)
+        print(label, " - ответ сети не правельный (-_-)")
+scorecard_array = numpy.asarray(scorecard)
+print("Эффективность сети - ", (scorecard_array.sum() / scorecard_array.size) * 100, "%")
 image_array = numpy.asfarray(all_values[1:]).reshape(28, 28)
 matplotlib.pyplot.imshow(image_array, cmap='Greys', interpolation='None')
 

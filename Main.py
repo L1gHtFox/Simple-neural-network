@@ -5,7 +5,11 @@ import Neural_network as Ai
 
 # Тут мы формируем список идеальных выходных значений сети из CSV-файла набора MNIST
 
+<<<<<<< Updated upstream
 training_data_file = open("mnist_dataset\mnist_train_100.csv", 'r')
+=======
+training_data_file = open("mnist_dataset\mnist_train_100.csv.csv", 'r')
+>>>>>>> Stashed changes
 training_data_list = training_data_file.readlines()
 training_data_file.close()
 
